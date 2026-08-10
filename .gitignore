@@ -1,0 +1,13 @@
+.vs/
+
+SistemaNotas.Api/obj/*
+SistemaNotas.Api/bin/*
+
+SistemaNotas.Application/bin/*
+SistemaNotas.Application/obj/*
+
+SistemaNotas.Infrastructure/bin/*
+SistemaNotas.Infrastructure/obj/*
+
+SistemaNotas.Domain/bin/*
+SistemaNotas.Domain/obj/*
