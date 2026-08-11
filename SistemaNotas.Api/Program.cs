@@ -1,3 +1,5 @@
+using SistemaNotas.Api.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+string corsPolicyName = "SistemaNotasCorsPolicy"; // Le damos un nombre a nuestra política
+
+// Registramos el CORS
+builder.Services.AddCorsConfiguration(builder.Configuration, corsPolicyName);
+
+// Registramos nuestro servicio JWT
+builder.Services.AddJwtAuthenticationConfig(builder.Configuration);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -32,6 +42,12 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+app.UseCors(corsPolicyName);
+
+// Activamos la barrera de seguridad en el pipeline HTTP 
+app.UseAuthentication(); // "¿Quién eres?" (Valida el Token)
+app.UseAuthorization();  // "¿Puedes pasar?" (Valida el Permiso)
 
 app.Run();
 

@@ -1,6 +1,6 @@
 namespace SistemaNotas.Domain.Entities
 {
-    public class Retrospectiva
+    public class Retrospectiva : EntityBase
     {
         public Guid PresentacionId { get; set; }
         public int NivelNerviosismo { get; set; }
