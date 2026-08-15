@@ -1,14 +1,20 @@
 using SistemaNotas.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+string corsPolicyName = "SistemaNotasCorsPolicy"; // Le damos un nombre a nuestra política
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
-var app = builder.Build();
+// Agregar Base de datos
+builder.Services.AddDbContextConfig(builder.Configuration);
 
-string corsPolicyName = "SistemaNotasCorsPolicy"; // Le damos un nombre a nuestra política
+// Agregar UnitOfWork
+builder.Services.AddUnitOfWorkConfig();
+
+// Agregar HandleExceptiom
+builder.Services.AddGlobalExceptionHandler();
 
 // Registramos el CORS
 builder.Services.AddCorsConfiguration(builder.Configuration, corsPolicyName);
@@ -16,42 +22,18 @@ builder.Services.AddCorsConfiguration(builder.Configuration, corsPolicyName);
 // Registramos nuestro servicio JWT
 builder.Services.AddJwtAuthenticationConfig(builder.Configuration);
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
+
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+
 }
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
 app.UseCors(corsPolicyName);
-
-// Activamos la barrera de seguridad en el pipeline HTTP 
+app.UseHttpsRedirection();
 app.UseAuthentication(); // "¿Quién eres?" (Valida el Token)
 app.UseAuthorization();  // "¿Puedes pasar?" (Valida el Permiso)
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

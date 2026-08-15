@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="SistemaNotas.Api/SistemaNotas.Api.csproj" />
-  <Project Path="SistemaNotas.Application/SistemaNotas.Application.csproj" />
-  <Project Path="SistemaNotas.Domain/SistemaNotas.Domain.csproj" />
-  <Project Path="SistemaNotas.Infrastructure/SistemaNotas.Infrastructure.csproj" />
-</Solution>
