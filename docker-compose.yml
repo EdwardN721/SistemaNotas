@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Servicio 1: Base de Datos SQL Server
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sistemanotas-db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=TuPasswordSeguro123!
+      - MSSQL_PID=Express # Versión Express (gratuita y ligera para desarrollo)
+    ports:
+      - "1433:1433" 
+    volumes:
+      - sqlserver_data:/var/opt/mssql # Persistencia de datos si apagas el contenedor
+
+  # Servicio 2: Tu API en .NET 10
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sistemanotas-api
+    environment:
+      # Forzamos Development para poder ver la UI de Scalar
+      - ASPNETCORE_ENVIRONMENT=Development
+      
+      - ConnectionStrings__DefaultConnection=Server=db;Database=SistemaNotasDb;User Id=SA;Password=TuPasswordSeguro123!;TrustServerCertificate=True;
+      
+      # Variables de JWT inyectadas por seguridad
+      - JwtSettings__Secret=EstaEsUnaClaveSuperSecretaYDebeTenerAlMenos32Caracteres!
+      - JwtSettings__Issuer=SistemaNotasBackend
+      - JwtSettings__Audience=SistemaNotasClients
+      - JwtSettings__ExpirationInMinutes=120
+    ports:
+      - "8080:8080" # Mapea el puerto 8080 de tu PC al 8080 del contenedor
+    depends_on:
+      - db # Obliga a Docker a levantar la BD antes que la API
+
+# Definición del volumen virtual para que los datos sobrevivan reinicios
+volumes:
+  sqlserver_data:

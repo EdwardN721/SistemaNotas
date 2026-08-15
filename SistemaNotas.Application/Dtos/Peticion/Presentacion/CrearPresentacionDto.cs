@@ -3,7 +3,7 @@
   public record CrearPresentacionDto
   {
     public string Titulo { get; init; } = string.Empty;
-    public string? Audicencia {  get; init; }
-    public DateTime? FechaExposicion { get; init; }
+    public string? Audiencia {  get; init; }
+    public DateTimeOffset? FechaExposicion { get; init; }
   }
 }

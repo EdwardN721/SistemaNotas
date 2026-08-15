@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SistemaNotas.Domain.Interfaces;
 using SistemaNotas.Infrastructure.Data;
 
-namespace SistemaNotas.Infrastructure.Repository
+namespace SistemaNotas.Infrastructure.Repositories
 {
   public class RepositoryGeneric<T> : IRepositoryGeneric<T> where T : EntityBase
   {
@@ -34,6 +34,16 @@ namespace SistemaNotas.Infrastructure.Repository
     public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
     {
       await _context.Set<T>().AddAsync(entity, cancellationToken);
+    }
+
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<T>().AnyAsync(predicate, cancellationToken);
+    }
+
+    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<T>().FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
     public void Update(T entity)

@@ -3,13 +3,14 @@ using SistemaNotas.Domain.Interfaces;
 using SistemaNotas.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace SistemaNotas.Infrastructure.Repository
+namespace SistemaNotas.Infrastructure.Repositories
 {
   public class UnitOfWork : IUnitOfWork
   {
     private readonly NotasDbContext _context;
     private IDbContextTransaction? _currentTransaction;
 
+    private IRepositoryGeneric<Usuario>? _usuario;
     private IRepositoryGeneric<Presentacion>? _presentacion;
     private IRepositoryGeneric<Seccion>? _seccion;
     private IRepositoryGeneric<Ancla>? _ancla;
@@ -19,6 +20,11 @@ namespace SistemaNotas.Infrastructure.Repository
     public UnitOfWork(NotasDbContext context)
     {
       _context = context;
+    }
+
+    public IRepositoryGeneric<Usuario> Usuarios
+    {
+      get { return _usuario ??= new RepositoryGeneric<Usuario>(_context); }
     }
 
     public IRepositoryGeneric<Presentacion> Presentaciones {

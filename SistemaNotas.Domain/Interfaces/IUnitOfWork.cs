@@ -4,6 +4,7 @@ namespace SistemaNotas.Domain.Interfaces
 {
   public interface IUnitOfWork : IDisposable
   {
+    IRepositoryGeneric<Usuario> Usuarios { get; }
     IRepositoryGeneric<Presentacion> Presentaciones { get; }
     IRepositoryGeneric<Seccion> Secciones { get; }
     IRepositoryGeneric<Ancla> Anclas { get; }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Diagnostics;
+using SistemaNotas.Domain.Exceptions;
 
 namespace SistemaNotas.Api.Handlers
 {
@@ -40,6 +41,27 @@ namespace SistemaNotas.Api.Handlers
           problemDetails.Status = StatusCodes.Status404NotFound;
           problemDetails.Title = "Recurso no encontrado";
           problemDetails.Detail = "El identificador proporcionado no existe en nuestros registros.";
+          break;
+
+        // Excepcion personalizada para indicar que un recurso no fue encontrado
+        case NotFoundException:
+          problemDetails.Status = StatusCodes.Status404NotFound;
+          problemDetails.Title = "Recurso no encontrado";
+          problemDetails.Detail = "El recurso solicitado no se pudo encontrar.";
+          break;
+
+        // Reglas de negocio violadas (ej. correo duplicado, validaciones de negocio)
+        case BusinessRuleException:
+          problemDetails.Status = StatusCodes.Status400BadRequest;
+          problemDetails.Title = "La operacion no cumple con las reglas de negocio";
+          problemDetails.Detail = exception.Message;
+          break;
+
+        // Excepcion de autenticación/credenciales inválidas
+        case UnauthorizedAccessException:
+          problemDetails.Status = StatusCodes.Status401Unauthorized;
+          problemDetails.Title = "Acceso no autorizado";
+          problemDetails.Detail = "No tienes permisos para acceder a este recurso o realizar esta acción.";
           break;
 
         // Error genérico (Atrapa todo lo demás, ej. NullReferenceException)

@@ -35,6 +35,22 @@ namespace SistemaNotas.Domain.Interfaces
     /// <param name="cancellationToken">Token de cancelacion.</param>
     Task AddAsync(T entity, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Verifica si existe algún objeto que cumpla con la condición especificada.
+    /// </summary>
+    /// <param name="predicate">Condición o parametros a definir.</param>
+    /// <param name="cancellationToken">Token de cancelacion</param>
+    /// <returns>Regresa true si existe al menos un objeto que cumpla con la condición, false en caso contrario.</returns>
+    Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Obtiene el primer objeto que cumpla con la condición especificada o null si no existe ninguno.
+    /// </summary>
+    /// <param name="predicate">Condición o parametros a definir.</param>
+    /// <param name="cancellationToken">Token de cancelacion</param>
+    /// <returns>Regresa el primer objeto que cumpla con la condición o null si no existe ninguno.</returns>
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+
     void Update(T entity);
     void Delete(T entity);
   }

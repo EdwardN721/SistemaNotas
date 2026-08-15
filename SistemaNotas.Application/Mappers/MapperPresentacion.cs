@@ -13,14 +13,14 @@ namespace SistemaNotas.Application.Mappers
         Id = Guid.NewGuid(),
         Titulo = dto.Titulo,
         FechaExposicion = dto.FechaExposicion,
-        Audiencia = dto.Audicencia
+        Audiencia = dto.Audiencia
       };
     }
 
     public static void UpdateEntity(this Presentacion presentacion, ActualizarPresentacionDto actualizarDto)
     {
       presentacion.Titulo = actualizarDto.Titulo;
-      presentacion.Audiencia = actualizarDto.Audicencia;
+      presentacion.Audiencia = actualizarDto.Audiencia;
       presentacion.FechaExposicion = actualizarDto.FechaExposicion;
     }
 

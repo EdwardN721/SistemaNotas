@@ -9,6 +9,7 @@ public class NotasDbContext : DbContext
     public NotasDbContext(DbContextOptions<NotasDbContext> options) : base(options)
     { }
 
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Presentacion> Presentaciones => Set<Presentacion>();
     public DbSet<Seccion> Secciones => Set<Seccion>();
     public DbSet<Ancla> Anclas => Set<Ancla>();
