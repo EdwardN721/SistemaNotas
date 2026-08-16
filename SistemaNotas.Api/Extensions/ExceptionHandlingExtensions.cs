@@ -6,9 +6,9 @@ namespace SistemaNotas.Api.Extensions
   {
     public static IServiceCollection AddGlobalExceptionHandler(this IServiceCollection services)
     {
-      services.AddExceptionHandler<GlobalExceptionHandler>();
-
       services.AddProblemDetails();
+      
+      services.AddExceptionHandler<GlobalExceptionHandler>();
 
       return services;
     }

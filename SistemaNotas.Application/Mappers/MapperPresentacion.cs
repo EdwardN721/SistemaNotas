@@ -20,8 +20,13 @@ namespace SistemaNotas.Application.Mappers
 
     public static void UpdateEntity(this Presentacion presentacion, ActualizarPresentacionDto actualizarDto)
     {
-      presentacion.Titulo = actualizarDto.Titulo;
+      if (!string.IsNullOrWhiteSpace(actualizarDto.Titulo))
+      {
+        presentacion.Titulo = actualizarDto.Titulo;
+      }
+
       presentacion.Audiencia = actualizarDto.Audiencia;
+
       presentacion.FechaExposicion = actualizarDto.FechaExposicion;
     }
 
@@ -40,7 +45,7 @@ namespace SistemaNotas.Application.Mappers
 
     public static IReadOnlyList<PresentacionResponseDto> MapToDto(this IEnumerable<Presentacion>? presentaciones)
     {
-      return presentaciones?.Select(MapToDto).ToList() ?? 
+      return presentaciones?.Select(MapToDto).ToList() ??
         new List<PresentacionResponseDto>();
     }
   }

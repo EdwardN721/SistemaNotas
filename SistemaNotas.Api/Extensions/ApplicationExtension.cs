@@ -9,6 +9,9 @@ public static class ApplicationExtension
     {
         services.AddScoped<IPresentacionService, PresentacionService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPresentacionService, PresentacionService>();
+        services.AddScoped<IAnclaService, AnclaService>();
+        services.AddScoped<ISeccionService, SeccionService>();
 
         return services;
     }

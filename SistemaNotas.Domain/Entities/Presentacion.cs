@@ -1,5 +1,3 @@
-using SistemaNotas.Domain.Entities;
-
 namespace SistemaNotas.Domain.Entities
 {
     public class Presentacion : EntityBase
