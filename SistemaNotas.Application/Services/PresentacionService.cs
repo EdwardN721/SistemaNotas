@@ -42,10 +42,21 @@ namespace SistemaNotas.Application.Services
 
     public async Task<PresentacionResponseDto> ObtenerPresentacionPorIdAsync(Guid id, Guid usuarioId, CancellationToken cancellationToken = default)
     {
-      Presentacion presentacion = await ObtenerPresentacion(id, usuarioId, cancellationToken);
+        // Esto le dice a SQL Server: Trae la presentación, únela con Secciones, y únelas con Anclas.
+        var presentacion = await _unitOfWork.Presentaciones.FirstOrDefaultAsync(
+            p => p.Id == id && p.UsuarioId == usuarioId, 
+            cancellationToken,
+            "Secciones",          // Primer Nivel
+            "Secciones.Anclas"    // Segundo Nivel
+        );
 
-      _logger.LogInformation("Presentación {Titulo} encontrada.", presentacion.Titulo);
-      return presentacion.MapToDto();
+        if (presentacion is null)
+        {
+            _logger.LogWarning("Presentación {Id} no encontrada o sin acceso para el usuario {UsuarioId}", id, usuarioId);
+            throw new NotFoundException($"La presentación solicitada no existe o no tienes permisos.");
+        }
+
+        return presentacion.MapToDto();
     }
 
     public async Task ActualizarPresentacionAsync(Guid id, Guid usuarioId, ActualizarPresentacionDto dto, CancellationToken cancellationToken = default)

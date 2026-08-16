@@ -48,8 +48,9 @@ namespace SistemaNotas.Domain.Interfaces
     /// </summary>
     /// <param name="predicate">Condición o parametros a definir.</param>
     /// <param name="cancellationToken">Token de cancelacion</param>
+    /// <param name="includes">Condicion de Join</param>
     /// <returns>Regresa el primer objeto que cumpla con la condición o null si no existe ninguno.</returns>
-    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params string[] includes);
 
     void Update(T entity);
     void Delete(T entity);

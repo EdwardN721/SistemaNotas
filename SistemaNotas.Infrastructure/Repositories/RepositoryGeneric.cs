@@ -38,13 +38,25 @@ namespace SistemaNotas.Infrastructure.Repositories
 
     public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await _context.Set<T>().AnyAsync(predicate, cancellationToken);
+      return await _context.Set<T>().AnyAsync(predicate, cancellationToken);
     }
 
-    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params string[] includes)
     {
-        return await _context.Set<T>().FirstOrDefaultAsync(predicate, cancellationToken);
+      IQueryable<T> query = _context.Set<T>();
+
+      // Validamos que includes no sea null y tenga elementos
+      if (includes != null && includes.Length > 0)
+      {
+        foreach (var include in includes)
+        {
+          query = query.Include(include);
+        }
+      }
+
+      return await query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
+
 
     public void Update(T entity)
     {

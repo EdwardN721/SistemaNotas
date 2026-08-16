@@ -22,5 +22,8 @@ public class NotasDbContext : DbContext
 
         // Esto busca automáticamente todas las clases que hereden de IEntityTypeConfiguration 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // Ejecuta Seed
+        modelBuilder.SeedData();
     }
 }

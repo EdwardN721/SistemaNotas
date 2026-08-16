@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaNotas.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SistemaNotas.Infrastructure.Data;
 namespace SistemaNotas.Infrastructure.Migrations
 {
     [DbContext(typeof(NotasDbContext))]
-    partial class NotasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260816180650_AgregarSeedData")]
+    partial class AgregarSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

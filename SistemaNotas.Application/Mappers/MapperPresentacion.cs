@@ -1,6 +1,7 @@
 ﻿using SistemaNotas.Domain.Entities;
 using SistemaNotas.Application.Dtos.Peticion.Presentacion;
 using SistemaNotas.Application.Dtos.Respuesta.Presentacion;
+using SistemaNotas.Application.Dtos.Respuesta.Seccion;
 
 namespace SistemaNotas.Application.Mappers
 {
@@ -40,6 +41,10 @@ namespace SistemaNotas.Application.Mappers
         Audiencia = presentacion.Audiencia,
         FechaExposicion = presentacion.FechaExposicion,
         CreatedAt = presentacion.CreatedAt,
+
+        Secciones = presentacion.Secciones != null 
+                        ? presentacion.Secciones.Select(s => s.MapToDto()).OrderBy(s => s.Orden).ToList() 
+                        : new List<SeccionResponseDto>()
       };
     }
 

@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using SistemaNotas.Api.Extensions;
+using SistemaNotas.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 string corsPolicyName = "SistemaNotasCorsPolicy"; // Le damos un nombre a nuestra política
@@ -30,6 +32,26 @@ builder.Services.AddApiVersioningAndDocs();
 builder.Services.AddServicesConfiguration();
 
 var app = builder.Build();
+
+// SECCIÓN DE MIGRACIÓN AUTOMÁTICA Y SEED
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        // Obtenemos el DbContext de nuestra aplicación
+        var context = services.GetRequiredService<NotasDbContext>();
+        
+        // Ejecuta todas las migraciones pendientes y aplica el Seed de Datos
+        context.Database.Migrate(); 
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocurrió un error al migrar o inicializar la base de datos.");
+    }
+}
+
 
 // Aplicamos las migraciones pendientes al iniciar la aplicación
 app.ApplyPendingMigrations();
