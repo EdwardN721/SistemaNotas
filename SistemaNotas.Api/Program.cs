@@ -26,6 +26,9 @@ builder.Services.AddJwtAuthenticationConfig(builder.Configuration);
 // Registramos la versión de la API y la documentación
 builder.Services.AddApiVersioningAndDocs();
 
+// Registramos los servicios de la capa de aplicación
+builder.Services.AddServicesConfiguration();
+
 var app = builder.Build();
 
 // Aplicamos las migraciones pendientes al iniciar la aplicación

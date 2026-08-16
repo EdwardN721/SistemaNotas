@@ -6,11 +6,12 @@ namespace SistemaNotas.Application.Mappers
 {
   public static class MapperPresentacion
   {
-    public static Presentacion MapToEntity(this CrearPresentacionDto dto)
+    public static Presentacion MapToEntity(this CrearPresentacionDto dto, Guid usuarioId)
     {
       return new Presentacion
       {
         Id = Guid.NewGuid(),
+        UsuarioId = usuarioId,
         Titulo = dto.Titulo,
         FechaExposicion = dto.FechaExposicion,
         Audiencia = dto.Audiencia
@@ -29,6 +30,7 @@ namespace SistemaNotas.Application.Mappers
       return new PresentacionResponseDto
       {
         Id = presentacion.Id,
+        UsuarioId = presentacion.UsuarioId,
         Titulo = presentacion.Titulo,
         Audiencia = presentacion.Audiencia,
         FechaExposicion = presentacion.FechaExposicion,

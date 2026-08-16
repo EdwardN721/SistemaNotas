@@ -118,7 +118,12 @@ namespace SistemaNotas.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Presentaciones", (string)null);
                 });
@@ -194,6 +199,38 @@ namespace SistemaNotas.Infrastructure.Migrations
                     b.ToTable("Secciones", (string)null);
                 });
 
+            modelBuilder.Entity("SistemaNotas.Domain.Entities.Usuario", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuarios");
+                });
+
             modelBuilder.Entity("SistemaNotas.Domain.Entities.Ancla", b =>
                 {
                     b.HasOne("SistemaNotas.Domain.Entities.CategoriaAncla", "Categoria")
@@ -211,6 +248,17 @@ namespace SistemaNotas.Infrastructure.Migrations
                     b.Navigation("Categoria");
 
                     b.Navigation("Seccion");
+                });
+
+            modelBuilder.Entity("SistemaNotas.Domain.Entities.Presentacion", b =>
+                {
+                    b.HasOne("SistemaNotas.Domain.Entities.Usuario", "Usuario")
+                        .WithMany("Presentaciones")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("SistemaNotas.Domain.Entities.Retrospectiva", b =>
@@ -250,6 +298,11 @@ namespace SistemaNotas.Infrastructure.Migrations
             modelBuilder.Entity("SistemaNotas.Domain.Entities.Seccion", b =>
                 {
                     b.Navigation("Anclas");
+                });
+
+            modelBuilder.Entity("SistemaNotas.Domain.Entities.Usuario", b =>
+                {
+                    b.Navigation("Presentaciones");
                 });
 #pragma warning restore 612, 618
         }

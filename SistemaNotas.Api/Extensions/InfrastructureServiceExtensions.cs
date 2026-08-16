@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SistemaNotas.Domain.Interfaces;
 using SistemaNotas.Infrastructure.Data;
-using SistemaNotas.Infrastructure.Repository;
+using SistemaNotas.Infrastructure.Repositories;
 using SistemaNotas.Infrastructure.Interceptors;
 
 namespace SistemaNotas.Api.Extensions

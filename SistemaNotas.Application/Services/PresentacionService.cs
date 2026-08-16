@@ -20,10 +20,10 @@ namespace SistemaNotas.Application.Services
       _logger = logger;
     }
 
-    public async Task<PresentacionResponseDto> CrearPresentacionAsync(CrearPresentacionDto dto, CancellationToken cancellationToken = default)
+    public async Task<PresentacionResponseDto> CrearPresentacionAsync(CrearPresentacionDto dto, Guid usuarioId, CancellationToken cancellationToken = default)
     {
       _logger.LogInformation("Creando Presentacion: {Titulo}", dto.Titulo);
-      Presentacion presentacion = dto.MapToEntity();
+      Presentacion presentacion = dto.MapToEntity(usuarioId);
 
       await _unitOfWork.Presentaciones.AddAsync(presentacion, cancellationToken);
       await _unitOfWork.CommitAsync(cancellationToken);
@@ -32,25 +32,25 @@ namespace SistemaNotas.Application.Services
       return presentacion.MapToDto();
     }
 
-    public async Task<IReadOnlyList<PresentacionResponseDto>> ObtenerTodasPresentacionesAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<PresentacionResponseDto>> ObtenerTodasPresentacionesAsync(Guid usuarioId, CancellationToken cancellationToken = default)
     {
-      IReadOnlyList<Presentacion> presentaciones = await _unitOfWork.Presentaciones.GetAllAsync(cancellationToken);
+      IReadOnlyList<Presentacion> presentaciones = await _unitOfWork.Presentaciones.GetAsync(p => p.UsuarioId == usuarioId, cancellationToken);
 
       _logger.LogInformation("Registros obtenidos: {Contador}", presentaciones.Count());
       return presentaciones.MapToDto();
     }
 
-    public async Task<PresentacionResponseDto> ObtenerPresentacionPorIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<PresentacionResponseDto> ObtenerPresentacionPorIdAsync(Guid id, Guid usuarioId, CancellationToken cancellationToken = default)
     {
-      Presentacion presentacion = await ObtenerPresentacion(id, cancellationToken);
+      Presentacion presentacion = await ObtenerPresentacion(id, usuarioId, cancellationToken);
 
       _logger.LogInformation("Presentación {Titulo} encontrada.", presentacion.Titulo);
       return presentacion.MapToDto();
     }
 
-    public async Task ActualizarPresentacionAsync(Guid id, ActualizarPresentacionDto dto, CancellationToken cancellationToken = default)
+    public async Task ActualizarPresentacionAsync(Guid id, Guid usuarioId, ActualizarPresentacionDto dto, CancellationToken cancellationToken = default)
     {
-      Presentacion presentacion = await ObtenerPresentacion(id, cancellationToken);
+      Presentacion presentacion = await ObtenerPresentacion(id, usuarioId, cancellationToken);
 
       presentacion.UpdateEntity(dto);
 
@@ -60,10 +60,10 @@ namespace SistemaNotas.Application.Services
       _logger.LogInformation("Presentación {Titulo} actualizada.", presentacion.Titulo);
     }
 
-    public async Task EliminarPresentacionAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task EliminarPresentacionAsync(Guid id, Guid usuarioId, CancellationToken cancellationToken = default)
     {
-      Presentacion presentacion = await ObtenerPresentacion(id, cancellationToken);
-      
+      Presentacion presentacion = await ObtenerPresentacion(id, usuarioId, cancellationToken);
+
       _unitOfWork.Presentaciones.Delete(presentacion);
     await _unitOfWork.CommitAsync(cancellationToken);
 
@@ -72,13 +72,12 @@ namespace SistemaNotas.Application.Services
 
     #region MetodosPrivados
 
-    private async Task<Presentacion> ObtenerPresentacion(Guid id, CancellationToken cancellationToken = default)
+    private async Task<Presentacion> ObtenerPresentacion(Guid id, Guid usuarioId, CancellationToken cancellationToken = default)
     {
-      Presentacion? presentacion = await _unitOfWork.Presentaciones.GetByIdAsync(id, cancellationToken);
-
+      Presentacion? presentacion = await _unitOfWork.Presentaciones.FirstOrDefaultAsync(p => p.Id == id && p.UsuarioId == usuarioId, cancellationToken);
       if (presentacion is null)
       {
-        _logger.LogWarning("La presentación no éxiste:");
+        _logger.LogWarning("La presentación no éxiste: {Id}", id);
         throw new NotFoundException("La presentación no éxiste.");
       }
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SistemaNotas.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class AgregarRelacionUsuarioPresentacion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,10 +29,28 @@ namespace SistemaNotas.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Usuarios",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuarios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Presentaciones",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaExposicion = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Audiencia = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -43,6 +61,12 @@ namespace SistemaNotas.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Presentaciones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Presentaciones_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,6 +159,11 @@ namespace SistemaNotas.Infrastructure.Migrations
                 column: "SeccionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Presentaciones_UsuarioId",
+                table: "Presentaciones",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Retrospectivas_PresentacionId",
                 table: "Retrospectivas",
                 column: "PresentacionId",
@@ -163,6 +192,9 @@ namespace SistemaNotas.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Presentaciones");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios");
         }
     }
 }

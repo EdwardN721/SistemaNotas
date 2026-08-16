@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using SistemaNotas.Application.Interfaces;
 using SistemaNotas.Application.Dtos.Peticion.Presentacion;
 using SistemaNotas.Application.Dtos.Respuesta.Presentacion;
+using SistemaNotas.Api.Extensions;
 
 namespace SistemaNotas.Api.Controllers;
 
@@ -36,7 +37,8 @@ public class PresentacionesController : ControllerBase
         [FromBody] CrearPresentacionDto request, 
         CancellationToken cancellationToken)
     {
-        PresentacionResponseDto response = await _presentacionService.CrearPresentacionAsync(request, cancellationToken);
+        Guid usuarioId = User.GetUsuarioId(); // Extrae el ID del usuario autenticado desde el token JWT
+        PresentacionResponseDto response = await _presentacionService.CrearPresentacionAsync(request, usuarioId, cancellationToken);
         
         // Retorna HTTP 201 (Created) e indica en los Headers la URL para consultar el nuevo recurso
         return CreatedAtAction(nameof(ObtenerPorId), new { id = response.Id }, response);
@@ -51,7 +53,8 @@ public class PresentacionesController : ControllerBase
     [ProducesResponseType(typeof(IReadOnlyList<PresentacionResponseDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> ObtenerTodas(CancellationToken cancellationToken)
     {
-        IReadOnlyList<PresentacionResponseDto> response = await _presentacionService.ObtenerTodasPresentacionesAsync(cancellationToken);
+        Guid usuarioId = User.GetUsuarioId();
+        IReadOnlyList<PresentacionResponseDto> response = await _presentacionService.ObtenerTodasPresentacionesAsync(usuarioId, cancellationToken);
         return Ok(response);
     }
 
@@ -66,9 +69,10 @@ public class PresentacionesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ObtenerPorId(Guid id, CancellationToken cancellationToken)
     {
+        Guid usuarioId = User.GetUsuarioId(); // Extrae el ID del usuario autenticado desde el token JWT
         // Si no existe, el servicio lanzará KeyNotFoundException y el GlobalExceptionHandler 
         // se encargará de devolver un HTTP 404 estructurado automáticamente.
-        PresentacionResponseDto response = await _presentacionService.ObtenerPresentacionPorIdAsync(id, cancellationToken);
+        PresentacionResponseDto response = await _presentacionService.ObtenerPresentacionPorIdAsync(id, usuarioId, cancellationToken);
         return Ok(response);
     }
 
@@ -88,7 +92,8 @@ public class PresentacionesController : ControllerBase
         [FromBody] ActualizarPresentacionDto request, 
         CancellationToken cancellationToken)
     {
-        await _presentacionService.ActualizarPresentacionAsync(id, request, cancellationToken);
+        Guid usuarioId = User.GetUsuarioId(); // Extrae el ID del usuario autenticado desde el token JWT
+        await _presentacionService.ActualizarPresentacionAsync(id, usuarioId, request, cancellationToken);
         
         return NoContent();
     }
@@ -104,7 +109,8 @@ public class PresentacionesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Eliminar(Guid id, CancellationToken cancellationToken)
     {
-        await _presentacionService.EliminarPresentacionAsync(id, cancellationToken);
+        Guid usuarioId = User.GetUsuarioId(); // Extrae el ID del usuario autenticado desde el token JWT
+        await _presentacionService.EliminarPresentacionAsync(id, usuarioId, cancellationToken);
         return NoContent();
     }
 }
