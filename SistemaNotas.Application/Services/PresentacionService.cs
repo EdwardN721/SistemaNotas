@@ -34,7 +34,13 @@ namespace SistemaNotas.Application.Services
 
     public async Task<IReadOnlyList<PresentacionResponseDto>> ObtenerTodasPresentacionesAsync(Guid usuarioId, CancellationToken cancellationToken = default)
     {
-      IReadOnlyList<Presentacion> presentaciones = await _unitOfWork.Presentaciones.GetAsync(p => p.UsuarioId == usuarioId, cancellationToken);
+      IReadOnlyList<Presentacion> presentaciones = await _unitOfWork.Presentaciones.GetAsync(
+        p => p.UsuarioId == usuarioId, 
+        true, // disableTracking
+        cancellationToken,
+        "Secciones",       
+        "Secciones.Anclas" 
+      );
 
       _logger.LogInformation("Registros obtenidos: {Contador}", presentaciones.Count());
       return presentaciones.MapToDto();
@@ -45,6 +51,7 @@ namespace SistemaNotas.Application.Services
         // Esto le dice a SQL Server: Trae la presentación, únela con Secciones, y únelas con Anclas.
         var presentacion = await _unitOfWork.Presentaciones.FirstOrDefaultAsync(
             p => p.Id == id && p.UsuarioId == usuarioId, 
+            true,
             cancellationToken,
             "Secciones",          // Primer Nivel
             "Secciones.Anclas"    // Segundo Nivel
@@ -85,7 +92,7 @@ namespace SistemaNotas.Application.Services
 
     private async Task<Presentacion> ObtenerPresentacion(Guid id, Guid usuarioId, CancellationToken cancellationToken = default)
     {
-      Presentacion? presentacion = await _unitOfWork.Presentaciones.FirstOrDefaultAsync(p => p.Id == id && p.UsuarioId == usuarioId, cancellationToken);
+      Presentacion? presentacion = await _unitOfWork.Presentaciones.FirstOrDefaultAsync(p => p.Id == id && p.UsuarioId == usuarioId, true, cancellationToken);
       if (presentacion is null)
       {
         _logger.LogWarning("La presentación no éxiste: {Id}", id);

@@ -42,7 +42,7 @@ public static class ModelBuilderExtensions
                 Id = usuarioId,
                 Nombre = "Eduardo Campos",
                 Email = "ed@mymail.com",
-                PasswordHash = "$2a$11$H5...hash_simulado_seguro...",
+                PasswordHash = "$2a$11$e7K4Vom.uK7M2wYQWb1nIe05g8l27S.U0fU98t29vE4F02j8pQ1iC",
                 CreatedAt = fechaActual
             }
         );

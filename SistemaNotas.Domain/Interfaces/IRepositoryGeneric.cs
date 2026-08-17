@@ -16,17 +16,19 @@ namespace SistemaNotas.Domain.Interfaces
     /// <summary>
     /// Obtiene todos los objetos de la base de datos.
     /// </summary>
+    /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelación.</param>
     /// <returns>Lista de solo lectura.</returns>
-    Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<T>> GetAllAsync(bool disableTracking = false, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Obtiene lista de objetos que cumplan con la condición
     /// </summary>
     /// <param name="predicate">Condición o parametros a definir.</param>
+    /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelacion</param>
     /// <returns>Lista de objetos delimitados.</returns>
-    Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate, bool disableTracking = false, CancellationToken cancellationToken = default, params string[] includes);
 
     /// <summary>
     /// Agrega una entidad a la base de datos
@@ -47,10 +49,11 @@ namespace SistemaNotas.Domain.Interfaces
     /// Obtiene el primer objeto que cumpla con la condición especificada o null si no existe ninguno.
     /// </summary>
     /// <param name="predicate">Condición o parametros a definir.</param>
+    /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelacion</param>
     /// <param name="includes">Condicion de Join</param>
     /// <returns>Regresa el primer objeto que cumpla con la condición o null si no existe ninguno.</returns>
-    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params string[] includes);
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, bool disableTracking = false, CancellationToken cancellationToken = default, params string[] includes);
 
     void Update(T entity);
     void Delete(T entity);

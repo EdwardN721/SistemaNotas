@@ -12,8 +12,8 @@ using SistemaNotas.Infrastructure.Data;
 namespace SistemaNotas.Infrastructure.Migrations
 {
     [DbContext(typeof(NotasDbContext))]
-    [Migration("20260816065652_AgregarRelacionUsuarioPresentacion")]
-    partial class AgregarRelacionUsuarioPresentacion
+    [Migration("20260816233320_AgregarSeedData")]
+    partial class AgregarSeedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,41 @@ namespace SistemaNotas.Infrastructure.Migrations
                     b.HasIndex("SeccionId");
 
                     b.ToTable("Anclas", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ff100001-1111-1111-1111-111111111111"),
+                            CategoriaId = new Guid("cc111111-1111-1111-1111-111111111111"),
+                            ConceptoClave = "Diferencias en memoria: Stack vs Heap",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Orden = 1,
+                            RecordatorioVisual = false,
+                            SeccionId = new Guid("bb100001-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("ff300001-3333-3333-3333-333333333333"),
+                            CategoriaId = new Guid("cc111111-1111-1111-1111-111111111111"),
+                            ConceptoClave = "Enfatizar interoperabilidad entre dependencias",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Orden = 1,
+                            RecordatorioVisual = false,
+                            SeccionId = new Guid("bb300001-3333-3333-3333-333333333333")
+                        },
+                        new
+                        {
+                            Id = new Guid("ff300002-3333-3333-3333-333333333333"),
+                            CategoriaId = new Guid("cc222222-2222-2222-2222-222222222222"),
+                            ConceptoClave = "Abrir Postman para mostrar el intercambio del JWT",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Orden = 1,
+                            RecordatorioVisual = true,
+                            SeccionId = new Guid("bb300002-3333-3333-3333-333333333333")
+                        });
                 });
 
             modelBuilder.Entity("SistemaNotas.Domain.Entities.CategoriaAncla", b =>
@@ -94,6 +129,44 @@ namespace SistemaNotas.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CategoriasAncla");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("cc111111-1111-1111-1111-111111111111"),
+                            Activo = true,
+                            CodigoColor = "#3498db",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Nombre = "Concepto Clave"
+                        },
+                        new
+                        {
+                            Id = new Guid("cc222222-2222-2222-2222-222222222222"),
+                            Activo = true,
+                            CodigoColor = "#e74c3c",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Nombre = "Demo / Código en Vivo"
+                        },
+                        new
+                        {
+                            Id = new Guid("cc333333-3333-3333-3333-333333333333"),
+                            Activo = true,
+                            CodigoColor = "#f1c40f",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Nombre = "Pregunta a Audiencia"
+                        },
+                        new
+                        {
+                            Id = new Guid("cc444444-4444-4444-4444-444444444444"),
+                            Activo = true,
+                            CodigoColor = "#2ecc71",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Nombre = "Alerta de Tiempo"
+                        });
                 });
 
             modelBuilder.Entity("SistemaNotas.Domain.Entities.Presentacion", b =>
@@ -129,6 +202,38 @@ namespace SistemaNotas.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Presentaciones", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aa111111-1111-1111-1111-111111111111"),
+                            Audiencia = "Trainees",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            FechaExposicion = new DateTimeOffset(new DateTime(2026, 8, 26, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Titulo = "Aprender C# desde cero: Fundamentos",
+                            UsuarioId = new Guid("11111111-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("aa222222-2222-2222-2222-222222222222"),
+                            Audiencia = "Frontend Devs",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            FechaExposicion = new DateTimeOffset(new DateTime(2026, 9, 5, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Titulo = "Angular con Signals y Standalone",
+                            UsuarioId = new Guid("11111111-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("aa333333-3333-3333-3333-333333333333"),
+                            Audiencia = "Arquitectos",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            FechaExposicion = new DateTimeOffset(new DateTime(2026, 9, 15, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            Titulo = "Implementación de LlaveMX en Gobierno",
+                            UsuarioId = new Guid("11111111-1111-1111-1111-111111111111")
+                        });
                 });
 
             modelBuilder.Entity("SistemaNotas.Domain.Entities.Retrospectiva", b =>
@@ -165,6 +270,18 @@ namespace SistemaNotas.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Retrospectivas", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ee100001-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            MuletillasDetectadas = "[\"este\",\"entonces\"]",
+                            NivelNerviosismo = 3,
+                            PresentacionId = new Guid("aa111111-1111-1111-1111-111111111111"),
+                            QueSalioBien = "La interacción con los juniors al explicar Clean Architecture fue muy fluida."
+                        });
                 });
 
             modelBuilder.Entity("SistemaNotas.Domain.Entities.Seccion", b =>
@@ -200,6 +317,38 @@ namespace SistemaNotas.Infrastructure.Migrations
                     b.HasIndex("PresentacionId");
 
                     b.ToTable("Secciones", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bb100001-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            MinutosEstimados = 15,
+                            Orden = 1,
+                            PresentacionId = new Guid("aa111111-1111-1111-1111-111111111111"),
+                            TituloSeccion = "Introducción al CLR"
+                        },
+                        new
+                        {
+                            Id = new Guid("bb300001-3333-3333-3333-333333333333"),
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            MinutosEstimados = 15,
+                            Orden = 1,
+                            PresentacionId = new Guid("aa333333-3333-3333-3333-333333333333"),
+                            TituloSeccion = "Marco Normativo OIDC"
+                        },
+                        new
+                        {
+                            Id = new Guid("bb300002-3333-3333-3333-333333333333"),
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsDeleted = false,
+                            MinutosEstimados = 30,
+                            Orden = 2,
+                            PresentacionId = new Guid("aa333333-3333-3333-3333-333333333333"),
+                            TituloSeccion = "Login y Tokens en .NET Core"
+                        });
                 });
 
             modelBuilder.Entity("SistemaNotas.Domain.Entities.Usuario", b =>
@@ -232,6 +381,17 @@ namespace SistemaNotas.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 8, 16, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Email = "ed@mymail.com",
+                            IsDeleted = false,
+                            Nombre = "Eduardo Campos",
+                            PasswordHash = "$2a$11$e7K4Vom.uK7M2wYQWb1nIe05g8l27S.U0fU98t29vE4F02j8pQ1iC"
+                        });
                 });
 
             modelBuilder.Entity("SistemaNotas.Domain.Entities.Ancla", b =>

@@ -387,7 +387,7 @@ namespace SistemaNotas.Infrastructure.Migrations
                             Email = "ed@mymail.com",
                             IsDeleted = false,
                             Nombre = "Eduardo Campos",
-                            PasswordHash = "$2a$11$H5...hash_simulado_seguro..."
+                            PasswordHash = "$2a$11$e7K4Vom.uK7M2wYQWb1nIe05g8l27S.U0fU98t29vE4F02j8pQ1iC"
                         });
                 });
 

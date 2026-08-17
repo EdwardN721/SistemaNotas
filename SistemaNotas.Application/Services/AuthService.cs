@@ -1,10 +1,10 @@
 using SistemaNotas.Domain.Entities;
 using SistemaNotas.Domain.Interfaces;
+using SistemaNotas.Domain.Exceptions;
+using SistemaNotas.Application.Mappers;
 using SistemaNotas.Application.Interfaces;
 using SistemaNotas.Application.Dtos.Peticion.Usuarios;
-using SistemaNotas.Domain.Exceptions;
 using SistemaNotas.Application.DTOs.Respuesta.Usuarios;
-using SistemaNotas.Application.Mappers;
 
 namespace SistemaNotas.Application.Services;
 
@@ -47,7 +47,7 @@ public class AuthService : IAuthService
   public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request, CancellationToken cancellationToken = default)
     {
         // Buscar al usuario por correo
-        Usuario? usuario = await _unitOfWork.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+        Usuario? usuario = await _unitOfWork.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email, true, cancellationToken);
 
         // Validar que exista y que la contraseña coincida con el Hash
         if (usuario is null || !BCrypt.Net.BCrypt.Verify(request.Password, usuario.PasswordHash))

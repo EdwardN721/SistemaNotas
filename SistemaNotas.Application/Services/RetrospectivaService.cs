@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Logging;
-using SistemaNotas.Application.Dtos.Peticion.Retrospectivas;
-using SistemaNotas.Application.Dtos.Respuesta.Retrospectivas;
-using SistemaNotas.Application.Interfaces;
-using SistemaNotas.Application.Mappers;
 using SistemaNotas.Domain.Entities;
 using SistemaNotas.Domain.Exceptions;
 using SistemaNotas.Domain.Interfaces;
+using SistemaNotas.Application.Mappers;
+using SistemaNotas.Application.Interfaces;
+using SistemaNotas.Application.Dtos.Peticion.Retrospectivas;
+using SistemaNotas.Application.Dtos.Respuesta.Retrospectivas;
 
 namespace SistemaNotas.Application.Services;
 
@@ -25,7 +25,7 @@ public class RetrospectivaService : IRetrospectivaService
         // 1. Validar que la Presentación exista y pertenezca al usuario
         var presentacion = await _unitOfWork.Presentaciones.FirstOrDefaultAsync(
             p => p.Id == dto.PresentacionId && p.UsuarioId == usuarioId, 
-            cancellationToken);
+            true, cancellationToken);
 
         if (presentacion is null)
         {
@@ -64,7 +64,7 @@ public class RetrospectivaService : IRetrospectivaService
             throw new UnauthorizedAccessException("La presentación no existe o no tienes permisos.");
         }
 
-        Retrospectiva? retrospectiva = await _unitOfWork.Retrospectivas.FirstOrDefaultAsync(r => r.PresentacionId == presentacionId, cancellationToken);
+        Retrospectiva? retrospectiva = await _unitOfWork.Retrospectivas.FirstOrDefaultAsync(r => r.PresentacionId == presentacionId, true, cancellationToken);
         
         return retrospectiva?.MapToDto(); 
     }
@@ -95,7 +95,7 @@ public class RetrospectivaService : IRetrospectivaService
 
     private async Task<Retrospectiva> ObtenerYValidarRetrospectivaAsync(Guid retrospectivaId, Guid usuarioId, CancellationToken cancellationToken)
     {
-        Retrospectiva? retrospectiva = await _unitOfWork.Retrospectivas.FirstOrDefaultAsync(r => r.Id == retrospectivaId, cancellationToken);
+        Retrospectiva? retrospectiva = await _unitOfWork.Retrospectivas.FirstOrDefaultAsync(r => r.Id == retrospectivaId, true, cancellationToken);
         
         if (retrospectiva is null)
             throw new NotFoundException("La retrospectiva no fue encontrada.");

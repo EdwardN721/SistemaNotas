@@ -24,7 +24,7 @@ public class CategoriaAnclaService : ICategoriaAnclaService
     {
         _logger.LogInformation("Usuario {UsuarioId} consultando categorías activas.", usuarioId);
 
-        var categorias = await _unitOfWork.CategoriasAncla.GetAsync(c => c.Activo, cancellationToken);
+        var categorias = await _unitOfWork.CategoriasAncla.GetAsync(c => c.Activo, true, cancellationToken);
         
         return categorias.Select(c => c.MapToDto()).ToList();
     }
@@ -53,7 +53,7 @@ public class CategoriaAnclaService : ICategoriaAnclaService
     {
         _logger.LogInformation("Usuario {UsuarioId} consultando todo el catálogo de categorías.", usuarioId);
 
-        var categorias = await _unitOfWork.CategoriasAncla.GetAllAsync(cancellationToken);
+        var categorias = await _unitOfWork.CategoriasAncla.GetAllAsync(true, cancellationToken);
         
         return categorias.Select(c => c.MapToDto()).ToList();
     }
@@ -86,7 +86,7 @@ public class CategoriaAnclaService : ICategoriaAnclaService
 
     private async Task<CategoriaAncla> ObtenerYValidarCategoriaAsync(Guid categoriaId, CancellationToken cancellationToken)
     {
-        CategoriaAncla? categoria = await _unitOfWork.CategoriasAncla.FirstOrDefaultAsync(c => c.Id == categoriaId, cancellationToken);
+        CategoriaAncla? categoria = await _unitOfWork.CategoriasAncla.FirstOrDefaultAsync(c => c.Id == categoriaId, true, cancellationToken);
         
         if (categoria is null)
         {

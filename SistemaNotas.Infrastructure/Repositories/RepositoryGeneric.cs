@@ -6,61 +6,79 @@ using SistemaNotas.Infrastructure.Data;
 
 namespace SistemaNotas.Infrastructure.Repositories
 {
-  public class RepositoryGeneric<T> : IRepositoryGeneric<T> where T : EntityBase
+  public class RepositoryGeneric<T>(NotasDbContext context) : IRepositoryGeneric<T> where T : EntityBase
   {
-    protected readonly NotasDbContext _context;
-
-    public RepositoryGeneric(NotasDbContext context)
-    {
-      _context = context;
-    }
+    protected readonly NotasDbContext _context = context;
 
     public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-      // FindAsync recibe un arreglo de llaves primarias y luego el token
-      return await _context.Set<T>().FindAsync(new object[] { id }, cancellationToken);
+        return await _context.Set<T>().FindAsync([id], cancellationToken);
     }
 
-    public async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> GetAllAsync(bool disableTracking = false, CancellationToken cancellationToken = default)
     {
-      return await _context.Set<T>().ToListAsync(cancellationToken);
+        IQueryable<T> query = _context.Set<T>();
+        
+        if (disableTracking) query = query.AsNoTracking();
+        
+        return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> GetAsync(
+        Expression<Func<T, bool>> predicate, 
+        bool disableTracking = false,
+        CancellationToken cancellationToken = default, 
+        params string[] includes)
     {
-      return await _context.Set<T>().Where(predicate).ToListAsync(cancellationToken);
+        IQueryable<T> query = _context.Set<T>();
+
+        if (disableTracking) query = query.AsNoTracking();
+
+        if (includes != null && includes.Length > 0)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query.Where(predicate).ToListAsync(cancellationToken);
     }
 
     public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
     {
       await _context.Set<T>().AddAsync(entity, cancellationToken);
     }
-
+    
     public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
       return await _context.Set<T>().AnyAsync(predicate, cancellationToken);
     }
 
-    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params string[] includes)
+    public async Task<T?> FirstOrDefaultAsync(
+        Expression<Func<T, bool>> predicate, 
+        bool disableTracking = false,
+        CancellationToken cancellationToken = default, 
+        params string[] includes)
     {
-      IQueryable<T> query = _context.Set<T>();
+        IQueryable<T> query = _context.Set<T>();
 
-      // Validamos que includes no sea null y tenga elementos
-      if (includes != null && includes.Length > 0)
-      {
-        foreach (var include in includes)
+        if (disableTracking) query = query.AsNoTracking();
+
+        if (includes != null && includes.Length > 0)
         {
-          query = query.Include(include);
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
         }
-      }
 
-      return await query.FirstOrDefaultAsync(predicate, cancellationToken);
+        return await query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
-
 
     public void Update(T entity)
     {
-      _context.Entry(entity).State = EntityState.Modified;
+      _context.Set<T>().Update(entity);
     }
 
     public void Delete(T entity)
